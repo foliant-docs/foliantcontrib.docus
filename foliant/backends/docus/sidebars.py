@@ -99,6 +99,15 @@ class SideBars:
         return self.sidebars[0].get_first_doc()
 
 
+def to_list(item):
+    result = item
+    if isinstance(item, str):
+        result = [item]
+    elif isinstance(item, dict):
+        result = [{k: v} for k, v in item.items()]
+    return result
+
+
 def flatten_seq(seq):
     """convert a sequence of embedded sequences into a plain list"""
     result = []
@@ -112,8 +121,7 @@ def flatten_seq(seq):
 
 
 def generate_sidebars(title: str, chapters: list, chapters_root: PosixPath):
-    if not isinstance(chapters, list):
-        raise RuntimeError('chapters should be list!')
+    chapters = to_list(chapters)
     sidebars = SideBars()
     if all(isinstance(c, dict) for c in chapters):  # multi-sidebar syntax
         for sb_dict in chapters:
@@ -126,8 +134,7 @@ def generate_sidebars(title: str, chapters: list, chapters_root: PosixPath):
 
 
 def generate_one_sidebar(name: str, chapters: list, chapters_root: PosixPath):
-    if not isinstance(chapters, list):
-        raise RuntimeError('chapters should be list!')
+    chapters = to_list(chapters)
     sidebar = SideBar(name=name)
     if all(isinstance(c, dict) for c in chapters):  # multi-category syntax
         for ctg_dict in chapters:
@@ -146,11 +153,12 @@ def generate_one_sidebar(name: str, chapters: list, chapters_root: PosixPath):
 def fillup_category_items(category: Category,
                           chapters: list,
                           chapters_root: PosixPath):
+    chapters = to_list(chapters)
     for chapter in chapters:
         if isinstance(chapter, str):
             item = Document(name=chapter, root=chapters_root)
         elif isinstance(chapter, dict):
             item = SubCategory(label=list(chapter.keys())[0])
-            for subchapter in flatten_seq(list(chapter.values())[0]):
+            for subchapter in flatten_seq(to_list(list(chapter.values())[0])):
                 item.add_item(Document(subchapter, root=chapters_root))
         category.add_item(item)
