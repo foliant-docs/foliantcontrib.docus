@@ -18,7 +18,7 @@ setup(
     long_description_content_type='text/markdown',
     version='0.2.0',
     author='Daniil Minukhin',
-    author_email='moigagoo@live.com',
+    author_email='ddddsa@gmail.com',
     url='https://github.com/foliant-docs/foliantcontrib.docus',
     packages=['foliant.backends.docus', 'foliant.preprocessors'],
     package_data={'foliant.backends.docus': ['assets/*']},
